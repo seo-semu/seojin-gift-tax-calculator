@@ -824,13 +824,12 @@
           </div>
           <div class="eok-hint" id="priorAmtEok">= 0원</div>
         </div>
-        <div class="field span2" id="fOtherAmt">
-          <label for="otherAmt">② 그 밖의 가족에게 받은 금액<br><span class="hint" id="otherHint">(예: 이번엔 조부모, 전에는 부모 — 증여재산공제를 함께 써요)</span></label>
+        <div class="field span2">
+          <label for="ovPriorDed">그때 공제받은 증여재산공제액<br><span class="hint">(모르면 비워 두세요 — 회색 자동값으로 계산, 이미 낸 세금을 빼는 데 사용)</span></label>
           <div class="inputbox">
-            <input type="text" inputmode="numeric" id="otherAmt" data-money placeholder="예: 3,000" />
+            <input type="text" inputmode="numeric" id="ovPriorDed" data-money />
             <span class="unit">만원</span>
           </div>
-          <div class="eok-hint" id="otherAmtEok">= 0원</div>
         </div>
         <div class="field span2" id="fPriorMinor">
           <label>그 증여를 받을 때 미성년자였나요?<br><span class="hint">(당시 공제한도 2천만원/5천만원 판단 — 이미 낸 세금 계산에 사용)</span></label>
@@ -838,6 +837,14 @@
             <button type="button" data-val="0" aria-pressed="true">성년</button>
             <button type="button" data-val="1" aria-pressed="false">미성년</button>
           </div>
+        </div>
+        <div class="field span2" id="fOtherAmt">
+          <label for="otherAmt">② 그 밖의 가족에게 받은 금액<br><span class="hint" id="otherHint">(예: 이번엔 조부모, 전에는 부모 — 증여재산공제를 함께 써요)</span></label>
+          <div class="inputbox">
+            <input type="text" inputmode="numeric" id="otherAmt" data-money placeholder="예: 3,000" />
+            <span class="unit">만원</span>
+          </div>
+          <div class="eok-hint" id="otherAmtEok">= 0원</div>
         </div>
       </div>
     </div>
@@ -885,13 +892,6 @@
           <label for="ovAppraisal">감정평가수수료 공제액 <span class="hint">(§55①)</span><br><span class="hint">평가가액으로 신고한 경우, 감정평가법인 500만원 한도</span></label>
           <div class="inputbox">
             <input type="text" inputmode="numeric" id="ovAppraisal" data-money data-ov />
-            <span class="unit">만원</span>
-          </div>
-        </div>
-        <div class="field">
-          <label for="ovPriorDed">종전 증여 때 공제받은 증여재산공제액<br><span class="hint">납부세액공제 자동계산에 사용</span></label>
-          <div class="inputbox">
-            <input type="text" inputmode="numeric" id="ovPriorDed" data-money data-ov />
             <span class="unit">만원</span>
           </div>
         </div>
@@ -1404,7 +1404,8 @@
         giftDed: ovInput('ovGiftDed', 10000),
         marriageUsed: ovInput('ovMarriageUsed', 10000),
         appraisal: ovInput('ovAppraisal', 10000),
-        priorDed: ovInput('ovPriorDed', 10000),
+        // 10년 내 증여 '있음'이면 전문가 영역과 관계없이 적용 (비워 두면 자동)
+        priorDed: priorSeg.get() === '1' && digitsOf('ovPriorDed') !== '' ? Number(digitsOf('ovPriorDed')) * 10000 : undefined,
         credit: ovInput('ovCredit', 1),
         priorSurcharge: ovInput('ovPriorSurcharge', 1),
       },
