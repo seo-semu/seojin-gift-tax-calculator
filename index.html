@@ -624,6 +624,8 @@
   .best-hint:hover { background: rgba(255,255,255,0.28); }
   .best-hint:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }
   #splitCard { scroll-margin-top: 64px; }
+  .debt-note { margin: -4px 0 16px; padding: 12px 14px; border-radius: 12px; background: var(--key-soft); color: var(--ink); font-size: 13.5px; line-height: 1.6; }
+  .debt-note-ref { display: block; margin-top: 4px; font-size: 12px; color: var(--ink-faint); }
   .due-card { margin-top: 12px; padding: 14px 18px; border-radius: 16px; background: var(--surface); font-size: 14px; color: var(--ink); display: flex; flex-direction: column; gap: 6px; line-height: 1.55; }
   .sticky-bar { padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
   .field[hidden], .adv-grid[hidden], .prior-box[hidden], .warn[hidden], .card[hidden] { display: none; }
@@ -962,12 +964,13 @@
 
     <div class="card card-pad" id="debtCompareCard" hidden>
       <div class="card-title">⚖️ 일반증여 vs 부담부증여</div>
+      <p class="debt-note">⚠️ <b>이 비교에는 받는 분의 취득세가 빠져 있어요.</b> 증여받는 부분은 3.5%(조정대상지역의 일정가액 이상 주택은 최대 12%)인데, 채무를 떠안는 부분은 보통 1~3%예요. 그래서 실제로는 부담부증여가 표보다 <b>더 유리한 경우가 많아요.</b> 다만 받는 분이 이미 집이 있으면 채무 부분도 8~12%로 무거워질 수 있으니 상담으로 확인하세요.<span class="debt-note-ref">지방세법 §11①2·8, §13의2 · 지방교육세·농어촌특별세 별도</span></p>
       <div class="table-scroll">
         <table class="compare" id="debtTable" style="min-width:0"></table>
       </div>
       <div class="mobile-cards" id="debtCards"></div>
       <div class="mc-hint">좌우로 넘겨서 비교해 보세요</div>
-      <p class="split-foot">일반증여는 채무를 증여하는 분이 계속 갚고, 부담부증여는 받는 분이 갚는 구조예요. 취득세(증여분·유상취득분 세율 차이)는 반영하지 않았어요.</p>
+      <p class="split-foot">일반증여는 채무를 증여하는 분이 계속 갚고, 부담부증여는 받는 분이 갚는 구조예요.</p>
     </div>
 
     <div class="card card-pad" id="transferCard" hidden>
