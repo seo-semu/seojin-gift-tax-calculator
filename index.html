@@ -622,8 +622,9 @@
   /* ===== 증여세 계산기 전용 ===== */
   .sticky-bar { padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
   .field[hidden], .adv-grid[hidden], .prior-box[hidden], .warn[hidden], .card[hidden] { display: none; }
-  .seg.seg-wrap { flex-wrap: wrap; }
-  .seg.seg-wrap button { flex: 1 0 auto; padding: 10px 12px; }
+  .seg.seg-wrap { display: grid; grid-template-columns: repeat(3, 1fr); }
+  .seg.seg-wrap button { padding: 10px 4px; white-space: nowrap; }
+  @media (max-width: 400px) { .seg.seg-wrap button { font-size: 13.5px; } }
   .prior-box {
     grid-column: 1 / -1;
     display: grid;
@@ -692,13 +693,15 @@
     <div class="card-title">📝 증여 정보 입력</div>
     <div class="grid">
       <div class="field span2">
-        <label>증여하는 사람은 받는 사람의 누구인가요?</label>
+        <label>누가 누구에게 주나요?
+          <button type="button" class="info-tip" aria-expanded="false">ⓘ<span class="info-tip-bubble">친척은 4촌 이내 혈족(형제·조카·삼촌 등)과 3촌 이내 인척(사위·며느리·처부모 등)이에요. 조부모가 손주에게 바로 주면 세금의 30%(미성년자가 20억원 넘게 받으면 40%)가 더 붙어요.</span></button></label>
         <div class="seg seg-wrap" id="relationSeg">
+          <button type="button" data-val="parent" aria-pressed="true">부모 → 자녀</button>
+          <button type="button" data-val="grand" aria-pressed="false">조부모 → 손주</button>
           <button type="button" data-val="spouse" aria-pressed="false">배우자</button>
-          <button type="button" data-val="ancestor" aria-pressed="true">부모·조부모</button>
-          <button type="button" data-val="descendant" aria-pressed="false">자녀·손주</button>
-          <button type="button" data-val="relative" aria-pressed="false">기타 친족</button>
-          <button type="button" data-val="other" aria-pressed="false">그 외 타인</button>
+          <button type="button" data-val="child" aria-pressed="false">자녀 → 부모</button>
+          <button type="button" data-val="relative" aria-pressed="false">친척</button>
+          <button type="button" data-val="other" aria-pressed="false">그 외</button>
         </div>
       </div>
       <div class="field span2">
@@ -774,15 +777,6 @@
           <button type="button" data-val="1" aria-pressed="false">미성년</button>
         </div>
       </div>
-      <div class="field" id="fSkip">
-        <label>증여하는 분이 조부모인가요?
-          <button type="button" class="info-tip" aria-expanded="false">ⓘ<span class="info-tip-bubble">부모를 건너뛰고 조부모가 손주에게 증여하면 세금의 30%(미성년자가 20억원 넘게 받으면 40%)가 더 붙어요. 단, 부모가 먼저 돌아가셔서 조부모에게 받는 경우는 할증되지 않으니 '부모'를 선택하세요.</span></button>
-          <br><span class="hint">(세대생략 할증 판단)</span></label>
-        <div class="seg" id="skipSeg">
-          <button type="button" data-val="0" aria-pressed="true">부모</button>
-          <button type="button" data-val="1" aria-pressed="false">조부모 등</button>
-        </div>
-      </div>
       <div class="field" id="fMarriage">
         <label>혼인·출산 증여공제 대상인가요?
           <button type="button" class="info-tip" aria-expanded="false">ⓘ<span class="info-tip-bubble">부모·조부모에게 혼인신고일 전후 2년 이내, 또는 자녀 출생일·입양신고일부터 2년 이내에 받으면 기본공제와 별도로 1억원을 더 빼줘요. 혼인과 출산을 합쳐 평생 1억원까지예요.</span></button>
@@ -842,6 +836,13 @@
       <summary>⚙️ 세무 전문가용 직접 입력 (선택)</summary>
       <p class="adv-lede">접어 두면 <b>받는 분은 국내 거주자, 신고는 기한 내</b>로 가정하고 나머지는 자동 계산해요. 펼치면 여기서 고른 값과 입력한 값이 우선 적용되고, 비워둔 칸은 자동 계산값(회색 글씨)을 그대로 씁니다.</p>
       <div class="adv-grid">
+        <div class="field span2" id="fSkipExempt">
+          <label>손주의 부모(증여자의 자녀)가 먼저 사망했나요?<br><span class="hint">조부모 → 손주 증여라도 이 경우는 세대생략 할증 제외 (§57① 단서)</span></label>
+          <div class="seg" id="skipExemptSeg">
+            <button type="button" data-val="0" aria-pressed="true">아니오</button>
+            <button type="button" data-val="1" aria-pressed="false">예, 할증 제외</button>
+          </div>
+        </div>
         <div class="field">
           <label>받는 사람이 국내 거주자인가요?<br><span class="hint">(비거주자는 증여재산공제 없음)</span></label>
           <div class="seg" id="residentSeg">
@@ -1267,7 +1268,9 @@
   }
   const relationSeg = makeSeg('relationSeg', syncVisibility);
   const minorSeg = makeSeg('minorSeg');
-  const skipSeg = makeSeg('skipSeg');
+  const skipExemptSeg = makeSeg('skipExemptSeg');
+  // 화면 선택 → 계산용 관계 (부모·조부모 = 직계존속, 자녀 → 부모 = 직계비속)
+  const relationOf = v => ({ parent: 'ancestor', grand: 'ancestor', child: 'descendant' }[v] || v);
   const marriageSeg = makeSeg('marriageSeg');
   const residentSeg = makeSeg('residentSeg', syncVisibility);
   const priorSeg = makeSeg('priorSeg', syncVisibility);
@@ -1278,14 +1281,14 @@
   const housesSeg = makeSeg('housesSeg', syncVisibility);
 
   function syncVisibility() {
-    const isAnc = relationSeg.get() === 'ancestor';
+    const isAnc = relationOf(relationSeg.get()) === 'ancestor';
     const resident = $('advBox').open ? residentSeg.get() === '1' : true;
     $('fMinor').hidden = !isAnc;
-    $('fSkip').hidden = !isAnc;
+    $('fSkipExempt').hidden = relationSeg.get() !== 'grand';
     $('fMarriage').hidden = !(isAnc && resident);
     $('priorBox').hidden = priorSeg.get() !== '1';
     $('fPriorMinor').hidden = !isAnc;
-    const rel = relationSeg.get();
+    const rel = relationOf(relationSeg.get());
     $('fOtherAmt').hidden = rel === 'spouse' || rel === 'other';
     $('otherHint').textContent = {
       ancestor: '(예: 이번엔 조부모, 전에는 부모 — 부모·조부모 등은 증여재산공제를 함께 써요)',
@@ -1359,9 +1362,11 @@
 
   function readInput() {
     return {
-      relation: relationSeg.get(),
+      relation: relationOf(relationSeg.get()),
+      relChoice: relationSeg.get(),
       minor: minorSeg.get() === '1',
-      skip: skipSeg.get() === '1',
+      // 조부모 → 손주는 세대생략 할증 (전문가 영역에서 '부모 사망'을 고르면 제외)
+      skip: relationSeg.get() === 'grand' && !($('advBox').open && skipExemptSeg.get() === '1'),
       marriage: marriageSeg.get(),
       // 전문가 영역이 접혀 있으면 거주자·기한 내 신고로 가정
       resident: $('advBox').open ? residentSeg.get() === '1' : true,
@@ -1471,7 +1476,7 @@
   function renderSplit(inp) {
     if (inp) lastSplitInp = inp;
     inp = lastSplitInp;
-    const show = inp && inp.relation === 'ancestor' && !inp.skip && inp.resident && !inp.debtOn;
+    const show = inp && inp.relChoice === 'parent' && inp.resident && !inp.debtOn;
     $('splitCard').hidden = !show;
     if (!show) return;
 
