@@ -1099,7 +1099,8 @@
     }
     return manwonTotal.toLocaleString('ko-KR') + '만원';
   }
-  const headAmt = n => manwon(round100man(n));
+  // 결과 카드 금액: 양도세 계산기와 같이 100만원 단위 반올림. 단, 0원 초과 100만원 미만은 '0만원'이 되지 않게 따로 표시
+  const headAmt = n => (n > 0 && n < 1000000 ? '100만원 미만' : manwon(round100man(n)));
 
   function deductionLimit(relation, minor, resident) {
     if (!resident) return 0;
@@ -1493,7 +1494,7 @@
     list.forEach((sc, i) => { if (sc.total < list[bestIdx].total) bestIdx = i; });
     const saving = list[0].total - list[bestIdx].total;
     $('splitLede').innerHTML = saving > 0
-      ? `${manwon(inp.N)}을 <b>${[list[bestIdx].members.kid && '자녀', list[bestIdx].members.inlaw && '사위·며느리', list[bestIdx].members.grand && '손주'].filter(Boolean).join(', ')} ${list[bestIdx].count}명</b>에게 나눠 주면 자녀 한 명에게 몰아줄 때보다 증여세가 <b>${headAmt(saving)}</b> 줄어요.`
+      ? `${manwon(inp.N)}을 <b>${[list[bestIdx].members.kid && '자녀', list[bestIdx].members.inlaw && '사위·며느리', list[bestIdx].members.grand && '손주'].filter(Boolean).join(', ')} ${list[bestIdx].count}명</b>에게 나눠 주면 자녀 한 명에게 몰아줄 때보다 증여세가 <b>${manwon(saving)}</b> 줄어요.`
       : `이 금액에서는 나눠 줘도 증여세 합계가 줄지 않아요.`;
 
     const cell = (main, sub) => `<span class="cell-main">${main}</span>${sub ? `<span class="cell-sub">${sub}</span>` : ''}`;
@@ -1618,13 +1619,13 @@
       $('bestAmtLabel').textContent = '증여세 + 양도세';
       $('bestAmt').textContent = headAmt(familyTotal);
       $('bestSub').innerHTML = `받는 분 증여세 ${headAmt(r.paid)} + 증여하는 분 양도세 ${headAmt(burden.total)}<br>`
-        + (d > 0 ? `일반증여보다 ${headAmt(d)} 절약` : d < 0 ? `일반증여보다 ${headAmt(-d)} 더 많아요` : '일반증여와 같아요');
+        + (d > 0 ? `일반증여보다 ${manwon(d)} 절약` : d < 0 ? `일반증여보다 ${manwon(-d)} 더 많아요` : '일반증여와 같아요');
     } else if (grossOn && !gs.nonResident) {
       $('bestLabel').textContent = '증여하는 분이 대신 내실 증여세';
       $('bestTitle').textContent = `🎁 ${manwon(inp.N)} 증여 · 증여세 대납`;
       $('bestAmtLabel').textContent = '대납 포함 증여세';
       $('bestAmt').textContent = headAmt(r.paid);
-      $('bestSub').innerHTML = `대납액도 증여로 보아 직접 낼 때보다 ${headAmt(r.paid - base.paid)} 늘어나요<br>총 증여재산 ${manwon(r.N)}`;
+      $('bestSub').innerHTML = `대납액도 증여로 보아 직접 낼 때보다 ${manwon(r.paid - base.paid)} 늘어나요<br>총 증여재산 ${manwon(r.N)}`;
     } else {
       $('bestLabel').textContent = '증여세 계산 결과';
       $('bestTitle').textContent = `🎁 ${manwon(inp.N)} 증여`;
