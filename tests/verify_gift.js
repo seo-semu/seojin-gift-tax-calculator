@@ -20,13 +20,14 @@ function indep(x){ // x: rel, minor, resident, skip, marriage(bool), report, N, 
   const lim = !x.resident?0 : anc?(x.minor?2e7:5e7) : x.rel==='spouse'?6e8 : x.rel==='descendant'?5e7 : x.rel==='relative'?1e7 : 0;
   const A = (x.prior>0 && x.N+x.prior>=1e7)? x.prior:0;               // §47②
   const gv = x.N + A;                                                  // 과세가액
-  let ded = Math.min(lim, gv);                                         // §53
+  const oth = Math.min(x.other || 0, lim);                              // §53 후단: 같은 그룹 다른 가족이 먼저 쓴 공제
+  let ded = Math.min(lim - oth, gv);                                   // §53
   if (anc && x.resident && x.marriage) ded += Math.min(1e8, gv-ded);   // §53의2
   let tb = gv - ded; if (tb < 5e5) tb = 0;                             // §55②
   const calc = Math.floor(art26(tb));                                  // 원 미만 절사
   // 종전분(같은 공제한도 가정)
   const plim = (anc && x.resident) ? (x.priorMinor?2e7:5e7) : lim;
-  let ptb = A - Math.min(plim, lim, A); if (ptb < 5e5) ptb = 0;
+  let ptb = A - Math.min(plim, lim - oth, A); if (ptb < 5e5) ptb = 0;
   const pcalc = Math.floor(art26(ptb));
   // §57 + 영§46의3 (동일 조부모 합산이므로 비율 1)
   let sur = 0;
@@ -62,6 +63,8 @@ const HAND = [
   ['조부모 재차 1억+1억', { skip: true, N: 1e8, prior: 1e8 }, 18915000],
   ['배우자 7억(구간경계)', { relation: 'spouse', N: 7e8 }, 9700000],
   ['타인 600만+종전500만', { relation: 'other', N: 6e6, prior: 5e6 }, 582000],
+  ['조부모→손주 5천·부모에게 받은 5천', { skip: true, N: 5e7, otherGroup: 5e7 }, 6305000],
+  ['부모→자녀 1억·조부모에게 받은 3천', { N: 1e8, otherGroup: 3e7 }, 7760000],
 ];
 let fail = 0;
 for (const [name, o, exp] of HAND) {
@@ -92,8 +95,8 @@ const amt = () => { const r = rnd(); return Math.round((r < .3 ? rnd() * 1e8 : r
 let rand = 0;
 for (let i = 0; i < 100000; i++) {
   const rel = pick(['ancestor', 'ancestor', 'ancestor', 'spouse', 'descendant', 'relative', 'other']);
-  const x = { rel, minor: rnd() < .3, resident: rnd() < .9, skip: rnd() < .4, marriage: rnd() < .2, report: rnd() < .8, N: amt() || 10000, prior: rnd() < .4 ? amt() : 0, priorMinor: rnd() < .3 };
-  const inp = { relation: rel, minor: x.minor, resident: x.resident, skip: x.skip, marriage: x.marriage ? 'marriage' : 'none', report: x.report, N: x.N, prior: x.prior, priorMinor: x.priorMinor, ov: {} };
+  const x = { rel, minor: rnd() < .3, resident: rnd() < .9, skip: rnd() < .4, marriage: rnd() < .2, report: rnd() < .8, N: amt() || 10000, prior: rnd() < .4 ? amt() : 0, priorMinor: rnd() < .3, other: rnd() < .3 ? amt() : 0 };
+  const inp = { relation: rel, minor: x.minor, resident: x.resident, skip: x.skip, marriage: x.marriage ? 'marriage' : 'none', report: x.report, N: x.N, prior: x.prior, priorMinor: x.priorMinor, otherGroup: x.other, ov: {} };
   if (computeGift(inp).paid !== indep(x)) rand++;
   if (i % 5 === 0 && x.resident) {
     const s = solveGrossUp(inp);

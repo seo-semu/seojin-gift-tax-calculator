@@ -803,9 +803,9 @@
         </div>
       </div>
       <div class="field span2">
-        <label>최근 10년 안에 같은 분에게 받은 증여가 있나요?
-          <button type="button" class="info-tip" aria-expanded="false">ⓘ<span class="info-tip-bubble">같은 사람에게 10년 안에 받은 증여는 모두 합쳐서 세금을 다시 계산해요. 부모님의 경우 아버지·어머니를 한 사람으로 봐요. 이미 낸 세금은 빼 드려요.</span></button>
-          <br><span class="hint">(부모에게 받은 경우 아버지·어머니 증여분을 모두 포함)</span></label>
+        <label>최근 10년 안에 가족에게 받은 증여가 있나요?
+          <button type="button" class="info-tip" aria-expanded="false">ⓘ<span class="info-tip-bubble">같은 분에게 10년 안에 받은 증여는 모두 합쳐서 세금을 다시 계산하고, 이미 낸 세금은 빼 드려요. 또 부모·조부모처럼 같은 그룹의 가족은 증여재산공제(5천만원 등)를 10년 동안 함께 써요.</span></button>
+          <br><span class="hint">(이번에 주는 분 포함, 부모·조부모 등 모두)</span></label>
         <div class="seg" id="priorSeg">
           <button type="button" data-val="0" aria-pressed="true">없음</button>
           <button type="button" data-val="1" aria-pressed="false">있음</button>
@@ -813,12 +813,20 @@
       </div>
       <div class="prior-box" id="priorBox" hidden>
         <div class="field span2">
-          <label for="priorAmt">10년 안에 받은 증여재산가액 합계</label>
+          <label for="priorAmt">① 이번에 주는 분에게 받은 금액<br><span class="hint">(부모라면 아버지·어머니 합산 — 이번 증여와 합쳐서 계산)</span></label>
           <div class="inputbox">
-            <input type="text" inputmode="numeric" id="priorAmt" data-money value="5,000" />
+            <input type="text" inputmode="numeric" id="priorAmt" data-money placeholder="예: 5,000" />
             <span class="unit">만원</span>
           </div>
           <div class="eok-hint" id="priorAmtEok">= 0원</div>
+        </div>
+        <div class="field span2" id="fOtherAmt">
+          <label for="otherAmt">② 그 밖의 가족에게 받은 금액<br><span class="hint" id="otherHint">(예: 이번엔 조부모, 전에는 부모 — 증여재산공제를 함께 써요)</span></label>
+          <div class="inputbox">
+            <input type="text" inputmode="numeric" id="otherAmt" data-money placeholder="예: 3,000" />
+            <span class="unit">만원</span>
+          </div>
+          <div class="eok-hint" id="otherAmtEok">= 0원</div>
         </div>
         <div class="field span2" id="fPriorMinor">
           <label>그 증여를 받을 때 미성년자였나요?<br><span class="hint">(당시 공제한도 2천만원/5천만원 판단 — 이미 낸 세금 계산에 사용)</span></label>
@@ -1111,7 +1119,9 @@
     const taxable = inp.N - debt + merged;
 
     // 공제 (§53 → §53의2 → 감정평가수수료 순, 과세가액 한도)
-    const giftDedAuto = limit;
+    // §53 후단: 같은 공제 그룹의 다른 가족에게 10년 내 받은 증여가 공제를 먼저 썼다고 보수적으로 가정
+    const otherUsed = Math.min(inp.otherGroup || 0, limit);
+    const giftDedAuto = limit - otherUsed;
     const giftDed = Math.min(ov.giftDed ?? giftDedAuto, giftDedAuto, taxable);   // 직접입력도 §53 한도 초과 불가
     const marriageAvail = (isAnc && inp.resident && inp.marriage !== 'none')
       ? Math.max(0, TAX.marriageLimit - (ov.marriageUsed || 0)) : 0;
@@ -1127,7 +1137,7 @@
     // 종전 증여 당시의 공제한도 (미성년 여부는 증여 당시 기준)
     const priorMinor = isAnc && inp.priorMinor;
     const priorLimit = deductionLimit(inp.relation, priorMinor, inp.resident);
-    const priorDedAuto = Math.min(priorLimit, limit, merged);
+    const priorDedAuto = Math.min(priorLimit, giftDedAuto, merged);
     const priorDed = merged > 0 ? Math.min(ov.priorDed ?? priorDedAuto, merged) : 0;
     const priorRaw = merged - priorDed;
     const priorBase = priorRaw < TAX.minBase ? 0 : priorRaw;
@@ -1157,7 +1167,7 @@
     const paid = floor10(payable);
 
     return {
-      N: inp.N, debt, merged, taxable, limit, giftDed, giftDedAuto, marriageDed, appraisalDed, rawBase, belowMin, base, br, calc,
+      N: inp.N, debt, merged, otherUsed, taxable, limit, giftDed, giftDedAuto, marriageDed, appraisalDed, rawBase, belowMin, base, br, calc,
       priorDed, priorDedAuto, priorBase, priorCalc, skipRate, grossSurcharge, priorSurcharge, priorSurchargeAuto, surcharge,
       totalTax, creditCap, creditAuto, credit, reportCredit, payable, paid,
     };
@@ -1275,6 +1285,13 @@
     $('fMarriage').hidden = !(isAnc && resident);
     $('priorBox').hidden = priorSeg.get() !== '1';
     $('fPriorMinor').hidden = !isAnc;
+    const rel = relationSeg.get();
+    $('fOtherAmt').hidden = rel === 'spouse' || rel === 'other';
+    $('otherHint').textContent = {
+      ancestor: '(예: 이번엔 조부모, 전에는 부모 — 부모·조부모 등은 증여재산공제를 함께 써요)',
+      descendant: '(예: 다른 자녀·손주 — 자녀·손주 등은 증여재산공제를 함께 써요)',
+      relative: '(다른 친척 — 친척끼리는 증여재산공제 1천만원을 함께 써요)',
+    }[rel] || '';
     $('debtBox').hidden = debtSeg.get() !== '1';
     $('fResYears').hidden = housesSeg.get() !== '1';
   }
@@ -1352,6 +1369,7 @@
       N: manwonInput('giftAmt'),
       prior: priorSeg.get() === '1' ? manwonInput('priorAmt') : 0,
       priorMinor: priorMinorSeg.get() === '1',
+      otherGroup: priorSeg.get() === '1' && !$('fOtherAmt').hidden ? manwonInput('otherAmt') : 0,
       debtOn: debtSeg.get() === '1',
       debt: debtSeg.get() === '1' ? manwonInput('debtAmt') : 0,
       acq: manwonInput('acqAmt'),
@@ -1383,6 +1401,7 @@
     if (r.merged > 0) add('10년 내 재차증여 합산 <small>(§47②)</small>', '+ ' + won(r.merged));
     add('증여세 과세가액', won(r.taxable), 'strong');
     add(`증여재산공제 <small>(§53, ${RELATION_LABEL[opts.relation]}${opts.relation === 'ancestor' && opts.minor ? '·미성년' : ''})</small>`, won(r.giftDed), 'minus');
+    if (r.otherUsed > 0) add('다른 가족 증여로 이미 쓴 공제', won(r.otherUsed), 'sub');
     if (r.marriageDed > 0) add('혼인·출산 증여재산공제 <small>(§53의2)</small>', won(r.marriageDed), 'minus');
     if (r.appraisalDed > 0) add('감정평가수수료 <small>(§55①)</small>', won(r.appraisalDed), 'minus');
     add('과세표준', won(r.base) + (r.belowMin ? ' (50만원 미만 과세최저한)' : ''), 'strong');
