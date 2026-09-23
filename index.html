@@ -626,6 +626,7 @@
   #splitCard { scroll-margin-top: 64px; }
   .debt-note { margin: -4px 0 16px; padding: 12px 14px; border-radius: 12px; background: var(--key-soft); color: var(--ink); font-size: 13.5px; line-height: 1.6; }
   .debt-note-ref { display: block; margin-top: 4px; font-size: 12px; color: var(--ink-faint); }
+  .notes .law-ref { display: block; font-size: 11.5px; color: var(--ink-faint); }
   .due-card { margin-top: 12px; padding: 14px 18px; border-radius: 16px; background: var(--surface); font-size: 14px; color: var(--ink); display: flex; flex-direction: column; gap: 6px; line-height: 1.55; }
   .sticky-bar { padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
   .field[hidden], .adv-grid[hidden], .prior-box[hidden], .warn[hidden], .card[hidden] { display: none; }
@@ -1034,16 +1035,16 @@
     <details class="breakdown">
       <summary>💡 가정 및 유의사항</summary>
       <div class="notes" style="padding:0 18px 16px">
-        <b>이 계산에 사용한 기준</b>
+        <b>이 계산의 전제</b>
         <ul>
-          <li>2026년 9월 현재 시행 중인 「상속세 및 증여세법」 기준입니다. 2026.8.3 정부 세제개편안에는 일반 증여세율·증여재산공제·할증·신고세액공제 변경이 없습니다(가업승계 증여특례 개편 등은 이 계산기에 반영하지 않음).</li>
-          <li>증여재산가액은 입력하신 시가를 그대로 사용합니다. 부동산·비상장주식 등의 실제 평가(§60~§66)는 별도로 확인이 필요합니다.</li>
-          <li>10년 내 재차증여는 같은 분(부모는 부부 합산)에게 받은 증여만 합산하며, 종전 증여 때도 지금과 같은 공제 한도를 적용받았다고 가정해 납부세액공제를 자동 계산합니다. 실제 신고 내역과 다르면 '전문가용 직접 입력'에서 수정하세요.</li>
-          <li>증여재산공제는 받는 사람 기준으로 증여자 그룹별 10년간 한도입니다(부모·조부모는 하나의 그룹). 다른 직계존속에게서 이미 공제받았다면 '전문가용 직접 입력'에서 공제액을 줄여 입력하세요.</li>
-          <li>대납 계산: 받는 사람이 비거주자이면 증여자가 연대납세의무자로서 낸 세금은 증여로 보지 않아(상증법 기본통칙 36-0…1) 대납액을 더하지 않습니다.</li>
-          <li>부담부증여는 주택만 계산하며, 증여하는 분의 양도세는 2026년 현행 소득세법 기준입니다(다주택 중과는 양도세 계산기와 같이 배제로 가정). 양도가액·취득가액은 채무액 ÷ 증여재산가액 비율로 안분하고(소득세법 시행령 §159), 필요경비도 같은 비율로 안분했습니다. 증여재산을 기준시가로 평가하는 경우 취득가액도 기준시가로 계산해야 하므로 결과가 달라집니다.</li>
-          <li>1주택 비과세(양도가액 12억원 이하)는 보유 2년 이상만 판단하며, 조정대상지역 취득 시 거주요건 등 세부 요건은 별도 확인이 필요합니다.</li>
-          <li>합산배제 증여재산, 창업자금·가업승계 과세특례, 가산세, 분납·연부연납, 취득세는 반영하지 않았습니다.</li>
+          <li>2026년 9월 현재 증여세법 기준이에요. 2026년 8월 정부 세제개편안에서도 일반 증여세율과 공제는 바뀌지 않았어요. <span class="law-ref">상증법 §26·§53·§57·§69</span></li>
+          <li>입력하신 금액을 그대로 증여재산가액으로 봐요. 부동산·비상장주식은 평가 방법에 따라 금액이 달라질 수 있어요. <span class="law-ref">상증법 §60~§66</span></li>
+          <li>10년 안에 같은 분(부모는 아버지·어머니 합산)에게 받은 증여는 합쳐서 계산하고, 그때 낸 세금은 빼 드려요. 그때도 지금과 같은 조건이었다고 가정하니, 실제 신고 내역과 다르면 '세무 전문가용 직접 입력'에서 고쳐 주세요. <span class="law-ref">상증법 §47②·§58</span></li>
+          <li>다른 가족에게 받은 증여가 공제(5천만원 등)를 먼저 썼다고 보고 계산해요. 받은 순서에 따라 실제 세금은 이보다 적을 수 있어요. <span class="law-ref">상증법 §53</span></li>
+          <li>따로 고르지 않으면 받는 분은 국내 거주자, 신고는 기한 안에 한다고 가정해요. <span class="law-ref">상증법 §53·§69②</span></li>
+          <li>증여세를 대신 내주는 경우, 받는 분이 해외 거주자(비거주자)이면 대신 낸 세금은 증여로 보지 않아요. <span class="law-ref">상증법 기본통칙 36-0…1</span></li>
+          <li>부담부증여는 주택만 계산하고, 증여하는 분의 양도세는 현재 세법 기준이에요(다주택 중과는 적용하지 않는 것으로 가정). 1주택 비과세는 보유 2년 이상인지만 따지므로 거주 요건 등은 따로 확인이 필요해요. <span class="law-ref">소득세법 §89·§95, 시행령 §159·§160</span></li>
+          <li>취득세, 가산세, 연부연납, 창업자금·가업승계 특례 같은 경우는 반영하지 않았어요.</li>
         </ul>
       </div>
     </details>
