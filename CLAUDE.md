@@ -36,3 +36,8 @@
 - URL: https://claude.ai/artifact/RG4aG2jVky53EQTQs4yDEA (2026-09-23 게시, 양도세 계산기 아티팩트와 별개)
 - 게시용 사본은 문서 뼈대 태그를 뺀 파일이어야 함(아티팩트가 자동으로 씌움). 수정 후 재게시 절차:
   `python3`로 `index.html`에서 `<!DOCTYPE html>`, `<html lang="ko">`, `<head>`, 두 `<meta>`, `</head>`, `<body>`, `</body>`, `</html>` 줄을 제거한 사본을 만들고 → Artifact publish에 `url`=위 주소로 게시.
+
+## 배포 (Vercel)
+- 공개 주소: https://seojin-gift-tax-calculator.vercel.app (팀 `seo_semu`, 프로젝트 `seojin-gift-tax-calculator`, 2026-09-23 연결)
+- `main`에 push하면 자동 배포. 배포별 개별 주소(`…-<hash>-seo-semu.vercel.app`)는 Vercel 보호로 로그인 필요 — 정상.
+- 이 세션의 Vercel 커넥터는 팀 프로젝트 조회 권한이 없었음 → 프로젝트 생성·연결은 사용자가 대시보드에서 직접 함.
