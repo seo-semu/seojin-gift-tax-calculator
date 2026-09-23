@@ -1707,14 +1707,39 @@
     window.__toastTimer = setTimeout(() => toast.classList.remove('show'), 2200);
   }
 
+  // 공유: 주요 입력값을 주소에 담아, 받은 사람이 같은 조건의 결과를 바로 보게 함 (전문가 입력·부담부증여 세부값은 제외)
+  const SHARE_SEGS = { rel: 'relationSeg', minor: 'minorSeg', mar: 'marriageSeg', gross: 'grossSeg', prior: 'priorSeg', pminor: 'priorMinorSeg' };
+  const SHARE_MONEY = { amt: 'giftAmt', pamt: 'priorAmt', oamt: 'otherAmt' };
+  function segValue(id) { return document.querySelector(`#${id} button[aria-pressed="true"]`).dataset.val; }
+  function shareUrl() {
+    const q = new URLSearchParams();
+    for (const [k, id] of Object.entries(SHARE_SEGS)) q.set(k, segValue(id));
+    for (const [k, id] of Object.entries(SHARE_MONEY)) { const d = digitsOf(id); if (d) q.set(k, d); }
+    return location.origin + location.pathname + '?' + q.toString();
+  }
+  function applyShared() {
+    let q;
+    try { q = new URLSearchParams(location.search); } catch (e) { return; }
+    if (![...q.keys()].length) return;
+    for (const [k, id] of Object.entries(SHARE_SEGS)) {
+      const btn = q.has(k) && document.querySelector(`#${id} button[data-val="${CSS.escape(q.get(k))}"]`);
+      if (btn) btn.click();
+    }
+    for (const [k, id] of Object.entries(SHARE_MONEY)) {
+      if (q.has(k) && /^\d{1,9}$/.test(q.get(k))) { $(id).value = q.get(k); $(id).dispatchEvent(new Event('input')); }
+    }
+  }
+
   $('shareBtn').addEventListener('click', async () => {
-    const shareData = { title: document.title, url: location.href };
+    const url = /^https?:$/.test(location.protocol) ? shareUrl() : location.href;
+    const amt = window.__stickyData ? `${window.__stickyData.label} ${window.__stickyData.amt}` : '';
+    const shareData = { title: document.title, text: amt ? `증여세 계산 결과: ${amt}` : document.title, url };
     try {
       if (navigator.share) { await navigator.share(shareData); return; }
     } catch (e) { /* 사용자가 공유를 취소한 경우 등 - 무시 */ }
     try {
-      await navigator.clipboard.writeText(location.href);
-      showToast('링크가 복사되었습니다');
+      await navigator.clipboard.writeText(url);
+      showToast('계산 조건이 담긴 링크가 복사되었습니다');
     } catch (e) {
       showToast('복사에 실패했어요. 주소창의 링크를 직접 복사해주세요');
     }
@@ -1728,6 +1753,7 @@
   formCard.addEventListener('click', e => { if (e.target.closest('.seg button')) autoCalc(); });
   $('advBox').addEventListener('toggle', autoCalc);
 
+  applyShared();
   $('calcBtn').click();
 </script>
 
