@@ -620,6 +620,11 @@
   }
 
   /* ===== 증여세 계산기 전용 ===== */
+  .best-hint { display: inline-block; margin-top: 16px; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,0.18); color: #FFFFFF; font-size: 14px; font-weight: 600; text-decoration: none; }
+  .best-hint:hover { background: rgba(255,255,255,0.28); }
+  .best-hint:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }
+  #splitCard { scroll-margin-top: 64px; }
+  .due-card { margin-top: 12px; padding: 14px 18px; border-radius: 16px; background: var(--surface); font-size: 14px; color: var(--ink); display: flex; flex-direction: column; gap: 6px; line-height: 1.55; }
   .sticky-bar { padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
   .field[hidden], .adv-grid[hidden], .prior-box[hidden], .warn[hidden], .card[hidden] { display: none; }
   .seg.seg-wrap { display: grid; grid-template-columns: repeat(3, 1fr); }
@@ -921,6 +926,11 @@
         <div class="best-year" id="bestTitle">🎁 1억원 증여</div>
         <div class="best-amt"><i id="bestAmtLabel" style="font-style:normal">예상 증여세</i> <span id="bestAmt">0만원</span></div>
         <div class="best-sub" id="bestSub"></div>
+        <a class="best-hint" id="bestHint" href="#splitCard" hidden></a>
+      </div>
+      <div class="due-card" id="dueCard">
+        <div id="dueLine">📅 <b>증여받은 달 말일부터 3개월 안</b>에 신고하고 납부해야 해요.</div>
+        <div id="dueSplit" hidden></div>
       </div>
     </div>
 
@@ -1481,6 +1491,7 @@
     inp = lastSplitInp;
     const show = inp && inp.relChoice === 'parent' && inp.resident && !inp.debtOn;
     $('splitCard').hidden = !show;
+    $('bestHint').hidden = true;
     if (!show) return;
 
     const k = Number(kidSeg.get()), s = Number(inlawSeg.get()), g = Number(grandSeg.get());
@@ -1493,6 +1504,11 @@
     let bestIdx = 0;
     list.forEach((sc, i) => { if (sc.total < list[bestIdx].total) bestIdx = i; });
     const saving = list[0].total - list[bestIdx].total;
+    if (saving > 0) {
+      const names = [list[bestIdx].members.kid && '자녀', list[bestIdx].members.inlaw && '사위·며느리', list[bestIdx].members.grand && '손주'].filter(Boolean).join('·');
+      $('bestHint').textContent = `👨‍👩‍👧 ${names} ${list[bestIdx].count}명에게 나눠 주면 ${manwon(saving)} 줄어요 ↓`;
+      $('bestHint').hidden = false;
+    }
     $('splitLede').innerHTML = saving > 0
       ? `${manwon(inp.N)}을 <b>${[list[bestIdx].members.kid && '자녀', list[bestIdx].members.inlaw && '사위·며느리', list[bestIdx].members.grand && '손주'].filter(Boolean).join(', ')} ${list[bestIdx].count}명</b>에게 나눠 주면 자녀 한 명에게 몰아줄 때보다 증여세가 <b>${manwon(saving)}</b> 줄어요.`
       : `이 금액에서는 나눠 줘도 증여세 합계가 줄지 않아요.`;
@@ -1639,6 +1655,17 @@
     $('grossCard').hidden = !(grossOn && !zero);
     if (grossOn && !zero) renderGrossCompare(base, gs);
     renderSplit(inp);
+    // 신고·납부기한(§68①) — 증여일을 아는 경우(부담부증여)만 날짜로 표시
+    if (burden && !isNaN(inp.giftDate)) {
+      const due = new Date(inp.giftDate.getFullYear(), inp.giftDate.getMonth() + 4, 0);
+      $('dueLine').innerHTML = `📅 <b>${due.getFullYear()}년 ${due.getMonth() + 1}월 ${due.getDate()}일까지</b> 증여세를 신고하고 납부해야 해요. (증여받은 달 말일부터 3개월)`;
+    } else {
+      $('dueLine').innerHTML = '📅 <b>증여받은 달 말일부터 3개월 안</b>에 신고하고 납부해야 해요.';
+    }
+    // 분납(§70②, 영 §66②): 납부세액 1천만원 초과 시 2개월 안에 나눠 납부
+    const installment = r.paid > 20000000 ? Math.floor(r.paid / 2) : r.paid > 10000000 ? r.paid - 10000000 : 0;
+    $('dueSplit').hidden = !installment;
+    if (installment) $('dueSplit').innerHTML = `💳 증여세가 1천만원을 넘어서 <b>최대 ${manwon(installment)}</b>은 기한 뒤 2개월 안에 나눠 낼 수 있어요. (분납)`;
     $('debtCompareCard').hidden = !burden;
     $('transferCard').hidden = !burden;
     $('debtWarn').hidden = !(burden && ['spouse', 'ancestor', 'descendant'].includes(inp.relation));
