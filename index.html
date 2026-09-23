@@ -620,6 +620,7 @@
   }
 
   /* ===== 증여세 계산기 전용 ===== */
+  h1 { word-break: keep-all; }
   .best-hint { display: inline-block; margin-top: 16px; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,0.18); color: #FFFFFF; font-size: 14px; font-weight: 600; text-decoration: none; }
   .best-hint:hover { background: rgba(255,255,255,0.28); }
   .best-hint:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }
@@ -693,7 +694,7 @@
       <span class="brand-strip-arrow">›</span>
     </a>
     <div class="eyebrow">증여세 계산기 · 현행 상증법 기준</div>
-    <h1>🎁 증여하면 세금이 얼마일까? 증여세 계산기</h1>
+    <h1>👨‍👩‍👧 증여하면 세금이 얼마일까? 증여세 계산기</h1>
     <p class="lede">가족 간 증여재산공제, 10년 내 재차증여 합산, 조부모 증여 할증, 증여세 대납까지 한 번에 계산합니다.</p>
   </div>
 
@@ -926,7 +927,7 @@
     <div id="resultContent">
       <div class="best-callout">
         <div class="best-label" id="bestLabel">증여세 계산 결과</div>
-        <div class="best-year" id="bestTitle">🎁 1억원 증여</div>
+        <div class="best-year" id="bestTitle">👨‍👩‍👧 1억원 증여</div>
         <div class="best-amt"><i id="bestAmtLabel" style="font-style:normal">예상 증여세</i> <span id="bestAmt">0만원</span></div>
         <div class="best-sub" id="bestSub"></div>
         <a class="best-hint" id="bestHint" href="#splitCard" hidden></a>
@@ -984,7 +985,7 @@
     </div>
 
     <div class="card card-pad" id="splitCard" hidden>
-      <div class="card-title">👨‍👩‍👧 받는 사람을 나누면 얼마나 줄어들까?</div>
+      <div class="card-title">🧑‍🤝‍🧑 받는 사람을 나누면 얼마나 줄어들까?</div>
       <p class="split-lede" id="splitLede"></p>
       <div class="split-controls">
         <div class="field">
@@ -1511,7 +1512,7 @@
     const saving = list[0].total - list[bestIdx].total;
     if (saving > 0) {
       const names = [list[bestIdx].members.kid && '자녀', list[bestIdx].members.inlaw && '사위·며느리', list[bestIdx].members.grand && '손주'].filter(Boolean).join('·');
-      $('bestHint').textContent = `👨‍👩‍👧 ${names} ${list[bestIdx].count}명에게 나눠 주면 ${manwon(saving)} 줄어요 ↓`;
+      $('bestHint').textContent = `🧑‍🤝‍🧑 ${names} ${list[bestIdx].count}명에게 나눠 주면 ${manwon(saving)} 줄어요 ↓`;
       $('bestHint').hidden = false;
     }
     $('splitLede').innerHTML = saving > 0
@@ -1643,13 +1644,13 @@
         + (d > 0 ? `일반증여보다 ${manwon(d)} 절약` : d < 0 ? `일반증여보다 ${manwon(-d)} 더 많아요` : '일반증여와 같아요');
     } else if (grossOn && !gs.nonResident) {
       $('bestLabel').textContent = '증여하는 분이 대신 내실 증여세';
-      $('bestTitle').textContent = `🎁 ${manwon(inp.N)} 증여 · 증여세 대납`;
+      $('bestTitle').textContent = `👨‍👩‍👧 ${manwon(inp.N)} 증여 · 증여세 대납`;
       $('bestAmtLabel').textContent = '대납 포함 증여세';
       $('bestAmt').textContent = headAmt(r.paid);
       $('bestSub').innerHTML = `대납액도 증여로 보아 직접 낼 때보다 ${manwon(r.paid - base.paid)} 늘어나요<br>총 증여재산 ${manwon(r.N)}`;
     } else {
       $('bestLabel').textContent = '증여세 계산 결과';
-      $('bestTitle').textContent = `🎁 ${manwon(inp.N)} 증여`;
+      $('bestTitle').textContent = `👨‍👩‍👧 ${manwon(inp.N)} 증여`;
       $('bestAmtLabel').textContent = '예상 증여세';
       $('bestAmt').textContent = headAmt(r.paid);
       const ded = r.giftDed + r.marriageDed;
