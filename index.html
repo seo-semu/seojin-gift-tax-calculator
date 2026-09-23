@@ -794,10 +794,12 @@
         </div>
       </div>
       <div class="field">
-        <label>받는 사람이 국내 거주자인가요?<br><span class="hint">(비거주자는 증여재산공제 없음)</span></label>
-        <div class="seg" id="residentSeg">
-          <button type="button" data-val="1" aria-pressed="true">거주자</button>
-          <button type="button" data-val="0" aria-pressed="false">비거주자</button>
+        <label>증여세를 증여하는 분이 대신 내주나요?
+          <button type="button" class="info-tip" aria-expanded="false">ⓘ<span class="info-tip-bubble">증여세는 받는 사람이 내야 해요. 증여하는 분이 대신 내주면 그 세금도 또 하나의 증여로 보아 증여재산에 더해지고, 세금이 다시 늘어나요. 계산기가 이 금액이 더 늘지 않는 지점까지 자동으로 맞춰 계산해요.</span></button>
+          <br><span class="hint">(대납액도 증여재산에 포함)</span></label>
+        <div class="seg" id="grossSeg">
+          <button type="button" data-val="0" aria-pressed="true">아니오</button>
+          <button type="button" data-val="1" aria-pressed="false">예, 대신 내줌</button>
         </div>
       </div>
       <div class="field span2">
@@ -826,28 +828,26 @@
           </div>
         </div>
       </div>
-      <div class="field">
-        <label>증여받은 달 말일부터 3개월 안에 신고하나요?<br><span class="hint">(기한 내 신고 시 3% 신고세액공제)</span></label>
-        <div class="seg" id="reportSeg">
-          <button type="button" data-val="1" aria-pressed="true">예</button>
-          <button type="button" data-val="0" aria-pressed="false">아니오</button>
-        </div>
-      </div>
-      <div class="field">
-        <label>증여세를 증여하는 분이 대신 내주나요?
-          <button type="button" class="info-tip" aria-expanded="false">ⓘ<span class="info-tip-bubble">증여세는 받는 사람이 내야 해요. 증여하는 분이 대신 내주면 그 세금도 또 하나의 증여로 보아 증여재산에 더해지고, 세금이 다시 늘어나요. 계산기가 이 금액이 더 늘지 않는 지점까지 자동으로 맞춰 계산해요.</span></button>
-          <br><span class="hint">(대납액도 증여재산에 포함)</span></label>
-        <div class="seg" id="grossSeg">
-          <button type="button" data-val="0" aria-pressed="true">아니오</button>
-          <button type="button" data-val="1" aria-pressed="false">예, 대신 내줌</button>
-        </div>
-      </div>
     </div>
 
     <details class="adv" id="advBox">
       <summary>⚙️ 세무 전문가용 직접 입력 (선택)</summary>
-      <p class="adv-lede">이 영역을 펼치면 입력한 값이 자동 계산값보다 우선 적용돼요. 비워둔 칸은 자동 계산값(회색 글씨)을 그대로 씁니다.</p>
+      <p class="adv-lede">접어 두면 <b>받는 분은 국내 거주자, 신고는 기한 내</b>로 가정하고 나머지는 자동 계산해요. 펼치면 여기서 고른 값과 입력한 값이 우선 적용되고, 비워둔 칸은 자동 계산값(회색 글씨)을 그대로 씁니다.</p>
       <div class="adv-grid">
+        <div class="field">
+          <label>받는 사람이 국내 거주자인가요?<br><span class="hint">(비거주자는 증여재산공제 없음)</span></label>
+          <div class="seg" id="residentSeg">
+            <button type="button" data-val="1" aria-pressed="true">거주자</button>
+            <button type="button" data-val="0" aria-pressed="false">비거주자</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>증여받은 달 말일부터 3개월 안에 신고하나요?<br><span class="hint">(기한 내 신고 시 3% 신고세액공제)</span></label>
+          <div class="seg" id="reportSeg">
+            <button type="button" data-val="1" aria-pressed="true">예</button>
+            <button type="button" data-val="0" aria-pressed="false">아니오</button>
+          </div>
+        </div>
         <div class="field">
           <label for="ovGiftDed">증여재산공제액 <span class="hint">(§53)</span><br><span class="hint">같은 그룹에서 이미 공제받은 금액은 빼고 입력</span></label>
           <div class="inputbox">
@@ -1269,7 +1269,7 @@
 
   function syncVisibility() {
     const isAnc = relationSeg.get() === 'ancestor';
-    const resident = residentSeg.get() === '1';
+    const resident = $('advBox').open ? residentSeg.get() === '1' : true;
     $('fMinor').hidden = !isAnc;
     $('fSkip').hidden = !isAnc;
     $('fMarriage').hidden = !(isAnc && resident);
@@ -1279,6 +1279,7 @@
     $('fResYears').hidden = housesSeg.get() !== '1';
   }
   syncVisibility();
+  $('advBox').addEventListener('toggle', syncVisibility);
   (function setDefaultGiftDate() {
     const t = new Date(), pad = n => String(n).padStart(2, '0');
     $('giftDate').value = `${t.getFullYear()}-${pad(t.getMonth() + 1)}-${pad(t.getDate())}`;
@@ -1345,8 +1346,9 @@
       minor: minorSeg.get() === '1',
       skip: skipSeg.get() === '1',
       marriage: marriageSeg.get(),
-      resident: residentSeg.get() === '1',
-      report: reportSeg.get() === '1',
+      // 전문가 영역이 접혀 있으면 거주자·기한 내 신고로 가정
+      resident: $('advBox').open ? residentSeg.get() === '1' : true,
+      report: $('advBox').open ? reportSeg.get() === '1' : true,
       N: manwonInput('giftAmt'),
       prior: priorSeg.get() === '1' ? manwonInput('priorAmt') : 0,
       priorMinor: priorMinorSeg.get() === '1',
