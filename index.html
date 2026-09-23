@@ -620,7 +620,8 @@
   }
 
   /* ===== 증여세 계산기 전용 ===== */
-  h1 { word-break: keep-all; }
+  h1, .lede { word-break: keep-all; }
+  h1 .nw { white-space: nowrap; }
   .best-hint { display: inline-block; margin-top: 16px; padding: 9px 16px; border-radius: 999px; background: rgba(255,255,255,0.18); color: #FFFFFF; font-size: 14px; font-weight: 600; text-decoration: none; }
   .best-hint:hover { background: rgba(255,255,255,0.28); }
   .best-hint:focus-visible { outline: 2px solid #FFFFFF; outline-offset: 2px; }
@@ -694,8 +695,8 @@
       <span class="brand-strip-arrow">›</span>
     </a>
     <div class="eyebrow">증여세 계산기 · 현행 상증법 기준</div>
-    <h1>👨‍👩‍👧 증여하면 세금이 얼마일까? 증여세 계산기</h1>
-    <p class="lede">가족 간 증여재산공제, 10년 내 재차증여 합산, 조부모 증여 할증, 증여세 대납까지 한 번에 계산합니다.</p>
+    <h1><span class="nw">👨‍👩‍👧 한 번에 줄까?</span> <span class="nw">나눠서 줄까?</span> <span class="nw">가족 간 증여세 비교</span></h1>
+    <p class="lede">부모·조부모가 자녀·손주에게 줄 때의 증여세를 계산하고, 나눠서 주면 얼마나 줄어드는지 비교합니다.</p>
   </div>
 
   <div class="card card-pad">
@@ -1653,9 +1654,7 @@
       $('bestTitle').textContent = `👨‍👩‍👧 ${manwon(inp.N)} 증여`;
       $('bestAmtLabel').textContent = '예상 증여세';
       $('bestAmt').textContent = headAmt(r.paid);
-      const ded = r.giftDed + r.marriageDed;
-      $('bestSub').innerHTML = `증여재산 ${manwon(r.taxable)}에서 공제 ${manwon(ded)} 적용`
-        + (inp.report ? '<br>기한 내 신고 시 신고세액공제 3% 반영' : '<br>신고세액공제 미적용');
+      $('bestSub').innerHTML = '';
     }
 
     $('grossCard').hidden = !(grossOn && !zero);
