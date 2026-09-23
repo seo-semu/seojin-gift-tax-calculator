@@ -1716,6 +1716,14 @@
     }
   });
 
+  // 입력을 바꾸면 자동으로 다시 계산 (버튼을 안 눌러 예전 결과가 남아 있는 일 방지)
+  const formCard = $('calcBtn').closest('.card');
+  let autoTimer = null;
+  const autoCalc = () => { clearTimeout(autoTimer); autoTimer = setTimeout(() => $('calcBtn').click(), 250); };
+  formCard.addEventListener('input', autoCalc);
+  formCard.addEventListener('click', e => { if (e.target.closest('.seg button')) autoCalc(); });
+  $('advBox').addEventListener('toggle', autoCalc);
+
   $('calcBtn').click();
 </script>
 
