@@ -35,63 +35,32 @@
     font-display: swap;
   }
 
+  /* 색 — 홈페이지 2안(v2.css) 값과 같다. 다크모드 없음
+       2026-09-15 세무사 지시로 통일: 파랑 #3182F6 → #0F62FE (홈페이지 버튼색) · 연한 파랑 #EBF2FE → #EEF2F9 (홈페이지 보조 바탕)
+       · 흐린 회색 #8A909A → #646A75 (홈페이지 각주색, 흰 바탕 명암 5.44)
+       ⚠ 흐린 회색을 다시 밝히지 말 것 — 「만원」 단위 · 안내 글이 명암 기준(4.5) 아래로 떨어진다 */
   :root {
+    color-scheme: light;
     --bg: #FFFFFF;
-    --surface: #F2F4F6;
-    --surface-2: #E8EBED;
+    --surface: #F3F4F6;
+    --surface-2: #E3E6EB;
     --input-bg: #FFFFFF;
-    --ink: #191F28;
-    --ink-soft: #4E5968;
-    --ink-faint: #8B95A1;
-    --primary: #3182F6;
-    --primary-soft: #EBF2FE;
-    --accent: #3182F6;
-    --border: #E5E8EB;
-    --warn-bg: #FFF0EE;
-    --warn-ink: #F04452;
+    --ink: #181D27;
+    --ink-soft: #646A75;
+    --ink-faint: #646A75;
+    --primary: #0F62FE;
+    --primary-hi: #0A4FD6;
+    --primary-soft: #EEF2F9;
+    --key: #0F62FE;
+    --key-soft: #EEF2F9;
+    --dark: #181D27;
+    --accent: #0F62FE;
+    --border: #E3E6EB;
+    --warn-bg: #FEF3F2;
+    --warn-ink: #B42318;
     --warn-border: transparent;
-    --good: #00B876;
-    --current-strong: #D6E7FE;
-    --shadow: none;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg: #121214;
-      --surface: #1E2124;
-      --surface-2: #292C30;
-      --input-bg: #26292D;
-      --ink: #F2F3F5;
-      --ink-soft: #ABB0B6;
-      --ink-faint: #75797E;
-      --primary: #4593FC;
-      --primary-soft: #1B2A40;
-      --accent: #4593FC;
-      --border: #2A2D30;
-      --warn-bg: #3A1F1F;
-      --warn-ink: #FF6B6B;
-      --warn-border: transparent;
-      --good: #00D6A3;
-      --current-strong: #21324A;
-      --shadow: none;
-    }
-  }
-  :root[data-theme="dark"] {
-    --bg: #121214;
-    --surface: #1E2124;
-    --surface-2: #292C30;
-    --input-bg: #26292D;
-    --ink: #F2F3F5;
-    --ink-soft: #ABB0B6;
-    --ink-faint: #75797E;
-    --primary: #4593FC;
-    --primary-soft: #1B2A40;
-    --accent: #4593FC;
-    --border: #2A2D30;
-    --warn-bg: #3A1F1F;
-    --warn-ink: #FF6B6B;
-    --warn-border: transparent;
-    --good: #00D6A3;
-    --current-strong: #21324A;
+    --good: #16794A;
+    --current-strong: #DCE5F5;
     --shadow: none;
   }
 
@@ -115,8 +84,8 @@
     display: inline-flex;
     width: fit-content;
     font-size: 13px;
-    color: var(--primary);
-    background: var(--primary-soft);
+    color: var(--primary-hi);  /* 연한 파랑 바탕 위 파랑 글자 — --key 면 명암 4.45 라 한 단 진하게 */
+    background: var(--key-soft);
     padding: 5px 12px;
     border-radius: 999px;
     font-weight: 600;
@@ -181,7 +150,7 @@
     background: var(--input-bg);
     color: var(--ink);
   }
-  input[type="date"] { padding-right: 14px; color-scheme: light dark; }
+  input[type="date"] { padding-right: 14px; color-scheme: light; }
   input:focus { outline: 2px solid var(--primary); outline-offset: 0; }
   .unit {
     position: absolute;
@@ -193,7 +162,7 @@
   .eok-hint {
     font-size: 12.5px;
     font-weight: 600;
-    color: var(--primary);
+    color: var(--key);
     padding-left: 2px;
   }
 
@@ -237,7 +206,7 @@
     cursor: pointer;
     letter-spacing: -0.01em;
   }
-  .calc-btn:hover { filter: brightness(1.06); }
+  .calc-btn:hover { background: var(--primary-hi); }
   .calc-btn:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; }
 
   .result { display: none; flex-direction: column; gap: 16px; opacity: 0; transform: translateY(10px); transition: opacity .35s ease, transform .35s ease; }
@@ -282,7 +251,7 @@
   .warn b { font-weight: 700; }
 
   .best-callout {
-    background: var(--primary);
+    background: var(--key);
     border-radius: 24px;
     padding: 32px 28px;
     text-align: center;
@@ -353,19 +322,20 @@
     margin-top: 2px;
   }
   table.compare th.current, table.compare td.current {
-    background: var(--primary-soft);
-    box-shadow: inset 2px 0 0 var(--primary), inset -2px 0 0 var(--primary);
+    background: var(--key-soft);
+    box-shadow: inset 2px 0 0 var(--key), inset -2px 0 0 var(--key);
   }
   table.compare thead th.current {
     border-radius: 12px 12px 0 0;
-    box-shadow: inset 2px 0 0 var(--primary), inset -2px 0 0 var(--primary), inset 0 2px 0 var(--primary);
+    box-shadow: inset 2px 0 0 var(--key), inset -2px 0 0 var(--key), inset 0 2px 0 var(--key);
   }
   table.compare tr:last-child td.current {
     border-radius: 0 0 12px 12px;
-    box-shadow: inset 2px 0 0 var(--primary), inset -2px 0 0 var(--primary), inset 0 -2px 0 var(--primary);
+    box-shadow: inset 2px 0 0 var(--key), inset -2px 0 0 var(--key), inset 0 -2px 0 var(--key);
   }
   table.compare tr.strong td { font-weight: 700; background: var(--surface-2); }
   table.compare tr.strong td.current { background: var(--current-strong); }
+  table.compare tr.strong td:first-child { color: var(--ink); }  /* 회색 띠 위 회색 글자 명암 4.35 → 잉크로 (2026-09-18 세무사: 색만) */
   table.compare td.good { color: var(--good); }
   table.compare td.bad { color: var(--warn-ink); }
 
@@ -412,6 +382,7 @@
   }
   .step.minus .val::before { content: "− "; color: var(--ink-faint); }
   .step.strong .lbl, .step.strong .val { font-weight: 700; }
+  .step.strong .lbl { color: var(--ink); }  /* 회색 띠 위 회색 글자 명암 4.35 → 잉크로 */
   .step.strong { background: var(--surface-2); margin: 4px -24px; padding: 12px 24px; border-radius: 12px; }
   .step.sub { padding: 5px 0 5px 14px; font-size: 13.5px; color: var(--ink-faint); }
   .step.sub .lbl::before { content: "· "; }
@@ -435,7 +406,7 @@
     border-radius: 50%;
     border: none;
     background: var(--surface-2);
-    color: var(--ink-faint);
+    color: var(--ink);
     font-size: 10.5px;
     font-weight: 700;
     line-height: 1;
@@ -518,12 +489,11 @@
     transform: translateY(-100%);
     transition: transform .25s ease;
   }
-  .sticky-bar { padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
   .sticky-bar.show { transform: translateY(0); }
   .sticky-bar .sb-amt {
     font-family: "Spoqa Han Sans Neo", "Pretendard Variable", sans-serif;
     font-variant-numeric: tabular-nums;
-    color: var(--primary);
+    color: var(--key);
     font-weight: 700;
   }
 
@@ -555,7 +525,7 @@
     max-width: 300px;
     scroll-snap-align: center;
   }
-  .mc-card.mc-best { background: var(--primary-soft); box-shadow: inset 0 0 0 2px var(--primary); }
+  .mc-card.mc-best { background: var(--key-soft); box-shadow: inset 0 0 0 2px var(--key); }
   .mc-year { font-weight: 700; font-size: 15px; margin-bottom: 10px; color: var(--ink); }
   .mc-row {
     display: flex;
@@ -588,7 +558,7 @@
     display: inline-flex;
     align-items: center;
     gap: 10px;
-    background: #123256;
+    background: var(--dark);
     color: #FFFFFF;
     text-decoration: none;
     padding: 6px 16px 6px 6px;
@@ -610,41 +580,47 @@
   .brand-strip-text { color: #FFFFFF; font-weight: 600; }
   .brand-strip-arrow { color: rgba(255,255,255,.6); }
 
-  /* 상담 CTA */
+  /* 상담 CTA — 2026-09-15 세무사 지시로 이 카드만 키웠다 (전화 · 카카오톡 · 상담신청)
+     카드 여백 20 → 28 · 제목 16 → 21px · 설명 13 → 15px · 버튼 높이 56 → 64 (휴대폰 52 → 60) · 버튼 글자 15/16 → 18px
+     ⚠ 계산기의 다른 글자 크기 · 버튼 높이는 세무사가 맞춰 둔 것이다. 이 카드 말고는 건드리지 말 것 */
   .consult-cta {
-    margin-top: 16px;
-    padding: 20px;
-    border-radius: 16px;
+    margin-top: 20px;
+    padding: 28px 24px;
+    border-radius: 20px;
     background: var(--surface);
     text-align: center;
   }
-  .consult-cta-title { font-size: 16px; font-weight: 700; color: var(--ink); }
-  .consult-cta-sub { font-size: 13px; color: var(--ink-soft); margin-top: 4px; margin-bottom: 14px; }
-  .consult-cta-buttons { display: flex; gap: 8px; }
+  .consult-cta-title { font-size: 21px; font-weight: 700; color: var(--ink); line-height: 1.4; word-break: keep-all; }
+  .consult-cta-sub { font-size: 15px; color: var(--ink-soft); margin-top: 6px; margin-bottom: 20px; }
+  .consult-cta-buttons { display: flex; gap: 10px; }
   .cc-btn {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 6px;
-    height: 56px;
-    border-radius: 12px;
-    font-size: 15px;
-    font-weight: 600;
+    gap: 8px;
+    height: 64px;
+    border-radius: 14px;
+    font-size: 18px;
+    font-weight: 700;
     text-decoration: none;
     white-space: nowrap;
-    padding: 0 8px;
+    padding: 0 10px;
   }
-  .cc-btn-ic { flex-shrink: 0; }
-  .cc-btn--navy { background: #123256; color: #FFFFFF; }
+  .cc-btn-ic { flex-shrink: 0; width: 22px; height: 22px; }
+  .cc-btn--navy { background: var(--primary); color: #FFFFFF; }
+  .cc-btn--navy:hover { background: var(--primary-hi); }
   .cc-btn--kakao { background: #FEE500; color: #191600; }
-  .cc-btn--line { background: var(--input-bg); color: #123256; border: 1px solid #C3CDDA; }
+  .cc-btn--line { background: var(--input-bg); color: var(--ink); border: 1px solid var(--border); }
+  .cc-btn--line:hover { border-color: var(--ink); }
   @media (max-width: 480px) {
     .consult-cta-buttons { flex-direction: column; }
-    .cc-btn { font-size: 16px; height: 52px; }
+    /* 세로로 쌓이면 flex:1 이 높이를 글자 높이(29px)로 줄여 버린다 — flex:none 으로 높이를 지킨다 */
+    .cc-btn { flex: none; font-size: 18px; height: 60px; }
   }
 
   /* ===== 증여세 계산기 전용 ===== */
+  .sticky-bar { padding-top: calc(12px + env(safe-area-inset-top, 0px)); }
   .field[hidden], .adv-grid[hidden], .prior-box[hidden], .warn[hidden], .card[hidden] { display: none; }
   .seg.seg-wrap { flex-wrap: wrap; }
   .seg.seg-wrap button { flex: 1 0 auto; padding: 10px 12px; }
@@ -679,7 +655,6 @@
   .adv-lede { font-size: 12.5px; color: var(--ink-faint); margin: 8px 0 14px; }
   .adv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px 12px; }
   @media (max-width: 560px) { .adv-grid { grid-template-columns: 1fr; } }
-  .best-callout .best-hangul { font-size: 13px; color: rgba(255,255,255,0.75); margin-top: -6px; margin-bottom: 10px; }
   .step .val.plus::before { content: "+ "; color: var(--ink-faint); }
   .step .lbl small { color: var(--ink-faint); font-size: 12px; margin-left: 4px; }
   .split-lede { font-size: 14px; color: var(--ink-soft); margin: -8px 0 16px; }
@@ -703,9 +678,9 @@
 
 <div class="wrap">
   <div>
-    <a class="brand-strip" href="https://seojin-homepage.vercel.app/" target="_blank" rel="noopener">
+    <a class="brand-strip" href="https://seojin-homepage-git-design-2-seo-semu.vercel.app/v2.html" target="_blank" rel="noopener">
       <img class="brand-strip-photo" src="data:image/jpeg;base64,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" alt="서재혁 세무사" />
-      <span class="brand-strip-text">서재혁 세무사가 만든 증여세 계산기</span>
+      <span class="brand-strip-text">서재혁 세무사 홈페이지 바로가기</span>
       <span class="brand-strip-arrow">›</span>
     </a>
     <div class="eyebrow">증여세 계산기 · 현행 상증법 기준</div>
@@ -931,10 +906,9 @@
 
     <div id="resultContent">
       <div class="best-callout">
-        <div class="best-label" id="bestLabel">예상 증여세</div>
-        <div class="best-year" id="bestTitle">🎁 납부할 증여세</div>
-        <div class="best-amt"><span id="bestAmt">0원</span></div>
-        <div class="best-hangul" id="bestHangul"></div>
+        <div class="best-label" id="bestLabel">증여세 계산 결과</div>
+        <div class="best-year" id="bestTitle">🎁 1억원 증여</div>
+        <div class="best-amt"><i id="bestAmtLabel" style="font-style:normal">예상 증여세</i> <span id="bestAmt">0만원</span></div>
         <div class="best-sub" id="bestSub"></div>
       </div>
     </div>
@@ -945,7 +919,7 @@
       <div class="consult-cta-buttons">
         <a class="cc-btn cc-btn--navy" href="tel:01027692598">📞 지금 통화</a>
         <a class="cc-btn cc-btn--kakao" href="https://pf.kakao.com/_hfpJX/chat" target="_blank" rel="noopener"><svg class="cc-btn-ic" viewBox="0 0 24 24" width="18" height="18" fill="#191600"><path d="M21 11.5a8.4 8.4 0 0 1-9 8.4 9.7 9.7 0 0 1-2.8-.4L4 21l1.4-4.1A8.2 8.2 0 0 1 3 11.5C3 6.8 7 3 12 3s9 3.8 9 8.5z"></path></svg>카카오톡으로 상담</a>
-        <a class="cc-btn cc-btn--line" href="https://seojin-homepage.vercel.app/index.html?from=gift-calculator#consult" target="_blank" rel="noopener">상담신청</a>
+        <a class="cc-btn cc-btn--line" href="https://seojin-homepage-git-design-2-seo-semu.vercel.app/v2-gift.html?from=calculator#consult" target="_blank" rel="noopener">상담신청</a>
       </div>
     </div>
 
@@ -1091,6 +1065,30 @@
   }
   const floor10 = n => Math.floor(n / 10) * 10;   // 국고금 관리법 §47
   const pct = r => (r * 100).toFixed(0) + '%';
+  // 금액 표시 — 양도세 계산기와 동일 (표·계산 과정: 억원/백만원, 결과 카드: 100만원 단위 반올림 억·만원)
+  function won(n) {
+    if (!n) return '0원';
+    const sign = n < 0 ? '-' : '';
+    const abs = Math.abs(n);
+    if (abs >= 100000000) {
+      const eok = Math.round(abs / 1000000) / 100;
+      return sign + eok.toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '억원';
+    }
+    const baekman = Math.round(abs / 10000) / 100;
+    return sign + baekman.toLocaleString('ko-KR', { maximumFractionDigits: 2 }) + '백만원';
+  }
+  function round100man(n) { return Math.round(n / 1000000) * 1000000; }
+  function manwon(n) {
+    const manwonTotal = Math.round(n / 10000);
+    if (Math.abs(n) >= 100000000) {
+      const eok = Math.trunc(manwonTotal / 10000);
+      const rest = Math.abs(manwonTotal % 10000);
+      if (rest === 0) return eok.toLocaleString('ko-KR') + '억원';
+      return eok.toLocaleString('ko-KR') + '억 ' + rest.toLocaleString('ko-KR') + '만원';
+    }
+    return manwonTotal.toLocaleString('ko-KR') + '만원';
+  }
+  const headAmt = n => manwon(round100man(n));
 
   function deductionLimit(relation, minor, resident) {
     if (!resident) return 0;
@@ -1234,7 +1232,7 @@
     // §104① 주택 단기세율 (1년 미만 70%, 2년 미만 60%) / 2년 이상 기본세율 (다주택 중과 배제 가정)
     if (years < 1) { out.tax = Math.trunc(out.base * 0.70); out.rateLabel = '단기세율 70% (1년 미만)'; }
     else if (years < 2) { out.tax = Math.trunc(out.base * 0.60); out.rateLabel = '단기세율 60% (2년 미만)'; }
-    else { const t = incomeTax(out.base); out.tax = t.tax; out.rateLabel = t.rate ? `${pct(t.rate)} (누진공제 ${Math.round(t.prog).toLocaleString('ko-KR')}원)` : '−'; }
+    else { const t = incomeTax(out.base); out.tax = t.tax; out.rateLabel = t.rate ? `${pct(t.rate)} (누진공제 ${won(t.prog)})` : '−'; }
     out.decided = floor10(out.tax);
     out.local = floor10(out.decided * 0.1);                // 지방소득세
     out.total = out.decided + out.local;
@@ -1339,19 +1337,6 @@
     return d === '' ? undefined : Number(d) * unit;
   }
 
-  const wonFull = n => Math.round(n).toLocaleString('ko-KR') + '원';
-  function hangul(n) {
-    n = Math.round(n);
-    if (!n) return '0원';
-    let rest = n;
-    const parts = [];
-    for (const [unit, size] of [['조', 1e12], ['억', 1e8], ['만', 1e4]]) {
-      const q = Math.floor(rest / size);
-      if (q) { parts.push(q.toLocaleString('ko-KR') + unit); rest -= q * size; }
-    }
-    if (rest) parts.push(rest.toLocaleString('ko-KR'));
-    return parts.join(' ') + '원';
-  }
   const toManwonText = n => (Math.round(n / 10000)).toLocaleString('ko-KR');
 
   function readInput() {
@@ -1387,30 +1372,30 @@
   function stepsHtml(r, opts = {}) {
     const rows = [];
     const add = (lbl, val, cls = '') => rows.push(`<div class="step ${cls}"><span class="lbl">${lbl}</span><span class="val">${val}</span></div>`);
-    add(opts.grossUp ? '증여재산가액 <small>(당초 + 대납액)</small>' : '증여재산가액', wonFull(r.N));
+    add(opts.grossUp ? '증여재산가액 <small>(당초 + 대납액)</small>' : '증여재산가액', won(r.N));
     if (opts.grossUp) {
-      add('당초 증여재산', wonFull(opts.N0), 'sub');
-      add('증여세 대납액', wonFull(opts.P), 'sub');
+      add('당초 증여재산', won(opts.N0), 'sub');
+      add('증여세 대납액', won(opts.P), 'sub');
     }
-    if (r.debt > 0) add('인수채무 (부담부증여) <small>(§47①)</small>', wonFull(r.debt), 'minus');
-    if (r.merged > 0) add('10년 내 재차증여 합산 <small>(§47②)</small>', '+ ' + wonFull(r.merged));
-    add('증여세 과세가액', wonFull(r.taxable), 'strong');
-    add(`증여재산공제 <small>(§53, ${RELATION_LABEL[opts.relation]}${opts.relation === 'ancestor' && opts.minor ? '·미성년' : ''})</small>`, wonFull(r.giftDed), 'minus');
-    if (r.marriageDed > 0) add('혼인·출산 증여재산공제 <small>(§53의2)</small>', wonFull(r.marriageDed), 'minus');
-    if (r.appraisalDed > 0) add('감정평가수수료 <small>(§55①)</small>', wonFull(r.appraisalDed), 'minus');
-    add('과세표준', wonFull(r.base) + (r.belowMin ? ' (50만원 미만 과세최저한)' : ''), 'strong');
-    add('적용세율', r.br ? `${pct(r.br.rate)} (누진공제 ${wonFull(r.br.prog)})` : '−');
-    add('산출세액', wonFull(r.calc));
+    if (r.debt > 0) add('인수채무 (부담부증여) <small>(§47①)</small>', won(r.debt), 'minus');
+    if (r.merged > 0) add('10년 내 재차증여 합산 <small>(§47②)</small>', '+ ' + won(r.merged));
+    add('증여세 과세가액', won(r.taxable), 'strong');
+    add(`증여재산공제 <small>(§53, ${RELATION_LABEL[opts.relation]}${opts.relation === 'ancestor' && opts.minor ? '·미성년' : ''})</small>`, won(r.giftDed), 'minus');
+    if (r.marriageDed > 0) add('혼인·출산 증여재산공제 <small>(§53의2)</small>', won(r.marriageDed), 'minus');
+    if (r.appraisalDed > 0) add('감정평가수수료 <small>(§55①)</small>', won(r.appraisalDed), 'minus');
+    add('과세표준', won(r.base) + (r.belowMin ? ' (50만원 미만 과세최저한)' : ''), 'strong');
+    add('적용세율', r.br ? `${pct(r.br.rate)} (누진공제 ${won(r.br.prog)})` : '−');
+    add('산출세액', won(r.calc));
     if (r.grossSurcharge > 0) {
-      add(`세대생략 할증 <small>(§57, ${pct(r.skipRate)})</small>`, '+ ' + wonFull(r.surcharge));
+      add(`세대생략 할증 <small>(§57, ${pct(r.skipRate)})</small>`, '+ ' + won(r.surcharge));
       if (r.priorSurcharge > 0) {
-        add('산출세액 × 할증률', wonFull(r.grossSurcharge), 'sub');
-        add('종전 할증세액 차감', '− ' + wonFull(r.priorSurcharge), 'sub');
+        add('산출세액 × 할증률', won(r.grossSurcharge), 'sub');
+        add('종전 할증세액 차감', '− ' + won(r.priorSurcharge), 'sub');
       }
     }
-    if (r.credit > 0) add('납부세액공제 <small>(§58)</small>', wonFull(r.credit), 'minus');
-    if (r.reportCredit > 0) add('신고세액공제 <small>(§69, 3%)</small>', wonFull(r.reportCredit), 'minus');
-    add('납부할 증여세 <small>(10원 미만 절사)</small>', wonFull(r.paid), 'strong');
+    if (r.credit > 0) add('납부세액공제 <small>(§58)</small>', won(r.credit), 'minus');
+    if (r.reportCredit > 0) add('신고세액공제 <small>(§69, 3%)</small>', won(r.reportCredit), 'minus');
+    add('납부할 증여세', won(r.paid), 'strong');
     return rows.join('');
   }
 
@@ -1419,11 +1404,11 @@
     const cols = ['받는 사람이 직접 납부', '증여하는 분이 대납'];
     const cell = (main, sub) => `<span class="cell-main">${main}</span>${sub ? `<span class="cell-sub">${sub}</span>` : ''}`;
     const rows = [
-      { label: '증여재산가액', cells: [cell(wonFull(r0.N)), cell(wonFull(r1.N), gs.P ? `대납액 ${wonFull(gs.P)} 포함` : '')] },
-      { label: '과세표준', cells: [cell(wonFull(r0.base)), cell(wonFull(r1.base))] },
-      { label: '납부할 증여세', cells: [cell(wonFull(r0.paid)), cell(wonFull(r1.paid))], strong: true },
-      { label: '받는 사람 손에 남는 금액', cells: [cell(wonFull(r0.N - r0.paid)), cell(wonFull(gs.nonResident ? r1.N : r1.N - r1.paid))] },
-      { label: '증여하는 분 총 부담', cells: [cell(wonFull(r0.N)), cell(wonFull(r0.N + r1.paid))], strong: true },
+      { label: '증여재산가액', cells: [cell(won(r0.N)), cell(won(r1.N), gs.P ? `대납액 ${won(gs.P)} 포함` : '')] },
+      { label: '과세표준', cells: [cell(won(r0.base)), cell(won(r1.base))] },
+      { label: '납부할 증여세', cells: [cell(won(r0.paid)), cell(won(r1.paid))], strong: true },
+      { label: '받는 사람 손에 남는 금액', cells: [cell(won(r0.N - r0.paid)), cell(won(gs.nonResident ? r1.N : r1.N - r1.paid))] },
+      { label: '증여하는 분 총 부담', cells: [cell(won(r0.N)), cell(won(r0.N + r1.paid))], strong: true },
     ];
     $('grossTable').innerHTML = '<thead><tr><th></th>' + cols.map((c, i) => `<th class="${i === 1 ? 'current' : ''}">${c}</th>`).join('') + '</tr></thead><tbody>'
       + rows.map(r => `<tr class="${r.strong ? 'strong' : ''}"><td>${r.label}</td>${r.cells.map((c, i) => `<td class="${i === 1 ? 'current' : ''}">${c}</td>`).join('')}</tr>`).join('') + '</tbody>';
@@ -1480,24 +1465,24 @@
     list.forEach((sc, i) => { if (sc.total < list[bestIdx].total) bestIdx = i; });
     const saving = list[0].total - list[bestIdx].total;
     $('splitLede').innerHTML = saving > 0
-      ? `${hangul(inp.N)}을 <b>${[list[bestIdx].members.kid && '자녀', list[bestIdx].members.inlaw && '사위·며느리', list[bestIdx].members.grand && '손주'].filter(Boolean).join(', ')} ${list[bestIdx].count}명</b>에게 나눠 주면 자녀 한 명에게 몰아줄 때보다 증여세가 <b>${wonFull(saving)}</b> 줄어요.`
+      ? `${manwon(inp.N)}을 <b>${[list[bestIdx].members.kid && '자녀', list[bestIdx].members.inlaw && '사위·며느리', list[bestIdx].members.grand && '손주'].filter(Boolean).join(', ')} ${list[bestIdx].count}명</b>에게 나눠 주면 자녀 한 명에게 몰아줄 때보다 증여세가 <b>${headAmt(saving)}</b> 줄어요.`
       : `이 금액에서는 나눠 줘도 증여세 합계가 줄지 않아요.`;
 
     const cell = (main, sub) => `<span class="cell-main">${main}</span>${sub ? `<span class="cell-sub">${sub}</span>` : ''}`;
-    const perCell = (sc, type) => sc.per[type] === undefined ? cell('−') : cell(wonFull(sc.per[type]));
+    const perCell = (sc, type) => sc.per[type] === undefined ? cell('−') : cell(won(sc.per[type]));
     const rows = [
       { label: '받는 사람', cells: list.map(sc => cell(`${sc.count}명`, who(sc.members))) },
-      { label: '1인당 증여액', cells: list.map(sc => cell(wonFull(sc.share))) },
+      { label: '1인당 증여액', cells: list.map(sc => cell(won(sc.share))) },
       { label: '자녀 1인', cells: list.map(sc => perCell(sc, 'kid')) },
     ];
     if (s > 0) rows.push({ label: '사위·며느리 1인', cells: list.map(sc => perCell(sc, 'inlaw')) });
     if (g > 0) rows.push({ label: '손주 1인 <span class="hint">(할증)</span>', cells: list.map(sc => perCell(sc, 'grand')) });
-    rows.push({ label: '증여세 합계', cells: list.map(sc => cell(wonFull(sc.total))), strong: true });
+    rows.push({ label: '증여세 합계', cells: list.map(sc => cell(won(sc.total))), strong: true });
     rows.push({ label: '몰아주기 대비', cells: list.map((sc, i) => {
       if (i === 0) return cell('−');
       const d = sc.total - list[0].total;
       if (d === 0) return cell('동일');
-      return { html: cell((d < 0 ? '−' : '+') + wonFull(Math.abs(d))), cls: d < 0 ? 'good' : 'bad' };
+      return { html: cell((d < 0 ? '−' : '+') + won(Math.abs(d))), cls: d < 0 ? 'good' : 'bad' };
     }) });
     const html = c => (typeof c === 'string' ? c : c.html);
     const cls = c => (typeof c === 'string' ? '' : c.cls);
@@ -1511,23 +1496,23 @@
   function renderTransferSteps(b) {
     const rows = [];
     const add = (lbl, val, cls = '') => rows.push(`<div class="step ${cls}"><span class="lbl">${lbl}</span><span class="val">${val}</span></div>`);
-    add(`양도가액 <small>(채무액, 안분비율 ${(b.ratio * 100).toFixed(2)}%)</small>`, wonFull(b.sale));
-    add('취득가액 <small>(영 §159 안분)</small>', wonFull(b.acqPart), 'minus');
-    add('필요경비 <small>(같은 비율 안분)</small>', wonFull(b.expPart), 'minus');
-    add('양도차익', wonFull(Math.max(0, b.gain)), 'strong');
+    add(`양도가액 <small>(채무액, 안분비율 ${(b.ratio * 100).toFixed(2)}%)</small>`, won(b.sale));
+    add('취득가액 <small>(영 §159 안분)</small>', won(b.acqPart), 'minus');
+    add('필요경비 <small>(같은 비율 안분)</small>', won(b.expPart), 'minus');
+    add('양도차익', won(Math.max(0, b.gain)), 'strong');
     if (b.exempt) {
       add('1세대1주택 비과세 <small>(§89①3, 12억원 이하)</small>', '비과세');
     } else if (b.gain > 0) {
-      if (b.highRatio < 1) add(`고가주택 과세분 <small>(12억 초과 비율 ${(b.highRatio * 100).toFixed(2)}%)</small>`, wonFull(b.taxableGain));
-      add(`장기보유특별공제 <small>(${b.ltLabel})</small>`, wonFull(b.ltAmt), 'minus');
-      add('양도소득금액', wonFull(b.income));
-      add('양도소득 기본공제 <small>(§103)</small>', wonFull(b.basic), 'minus');
-      add('과세표준', wonFull(b.base), 'strong');
+      if (b.highRatio < 1) add(`고가주택 과세분 <small>(12억 초과 비율 ${(b.highRatio * 100).toFixed(2)}%)</small>`, won(b.taxableGain));
+      add(`장기보유특별공제 <small>(${b.ltLabel})</small>`, won(b.ltAmt), 'minus');
+      add('양도소득금액', won(b.income));
+      add('양도소득 기본공제 <small>(§103)</small>', won(b.basic), 'minus');
+      add('과세표준', won(b.base), 'strong');
       add('적용세율', b.rateLabel);
-      add('양도소득세 <small>(보유 ' + b.years + '년)</small>', wonFull(b.decided));
-      add('지방소득세 <small>(10%)</small>', '+ ' + wonFull(b.local));
+      add('양도소득세 <small>(보유 ' + b.years + '년)</small>', won(b.decided));
+      add('지방소득세 <small>(10%)</small>', '+ ' + won(b.local));
     }
-    add('증여하는 분 양도세 합계', wonFull(b.total), 'strong');
+    add('증여하는 분 양도세 합계', won(b.total), 'strong');
     $('transferSteps').innerHTML = rows.join('');
   }
 
@@ -1538,10 +1523,10 @@
     const cell = (main, sub) => `<span class="cell-main">${main}</span>${sub ? `<span class="cell-sub">${sub}</span>` : ''}`;
     const diff = total[1] - total[0];
     const rows = [
-      { label: '받는 분 증여세', cells: [cell(wonFull(generalPaid)), cell(wonFull(giftPaid))] },
-      { label: '증여하는 분 양도세', cells: [cell('−'), cell(wonFull(b.total), b.exempt ? '1주택 비과세' : '지방소득세 포함')] },
-      { label: '가족 전체 세금', cells: [cell(wonFull(total[0])), cell(wonFull(total[1]))], strong: true },
-      { label: '일반증여 대비', cells: [cell('−'), diff === 0 ? cell('동일') : cell((diff < 0 ? '−' : '+') + wonFull(Math.abs(diff)))], cls: [null, diff < 0 ? 'good' : diff > 0 ? 'bad' : ''] },
+      { label: '받는 분 증여세', cells: [cell(won(generalPaid)), cell(won(giftPaid))] },
+      { label: '증여하는 분 양도세', cells: [cell('−'), cell(won(b.total), b.exempt ? '1주택 비과세' : '지방소득세 포함')] },
+      { label: '가족 전체 세금', cells: [cell(won(total[0])), cell(won(total[1]))], strong: true },
+      { label: '일반증여 대비', cells: [cell('−'), diff === 0 ? cell('동일') : cell((diff < 0 ? '−' : '+') + won(Math.abs(diff)))], cls: [null, diff < 0 ? 'good' : diff > 0 ? 'bad' : ''] },
     ];
     $('debtTable').innerHTML = '<thead><tr><th></th>' + cols.map((c, i) => `<th class="${i === best ? 'current' : ''}">${c}</th>`).join('') + '</tr></thead><tbody>'
       + rows.map(r => `<tr class="${r.strong ? 'strong' : ''}"><td>${r.label}</td>${r.cells.map((c, i) => `<td class="${[i === best ? 'current' : '', r.cls && r.cls[i] || ''].filter(Boolean).join(' ')}">${c}</td>`).join('')}</tr>`).join('') + '</tbody>';
@@ -1596,29 +1581,29 @@
     if (zero) {
       const ded = r.giftDed + r.marriageDed + r.appraisalDed;
       $('zeroSub').textContent = r.belowMin
-        ? `과세표준이 ${wonFull(r.rawBase)}으로 과세최저한(50만원) 미만이에요.`
-        : `증여세 과세가액 ${hangul(r.taxable)}이 공제 합계 ${hangul(ded)} 이내예요.`;
+        ? `과세표준이 ${won(r.rawBase)}으로 과세최저한(50만원) 미만이에요.`
+        : `증여세 과세가액 ${manwon(r.taxable)}이 공제 합계 ${manwon(ded)} 이내예요.`;
     } else if (burden) {
       const d = generalPaid - familyTotal;
       $('bestLabel').textContent = '부담부증여 시 가족 전체 세금';
-      $('bestTitle').textContent = '🏠 증여세 + 양도세';
-      $('bestAmt').textContent = wonFull(familyTotal);
-      $('bestHangul').textContent = hangul(familyTotal);
-      $('bestSub').innerHTML = `받는 분 증여세 ${wonFull(r.paid)} + 증여하는 분 양도세 ${wonFull(burden.total)}<br>`
-        + (d > 0 ? `일반증여(${wonFull(generalPaid)})보다 ${wonFull(d)} 적어요` : d < 0 ? `일반증여(${wonFull(generalPaid)})보다 ${wonFull(-d)} 많아요` : '일반증여와 같아요');
+      $('bestTitle').textContent = `🏠 ${manwon(inp.N)} 부담부증여`;
+      $('bestAmtLabel').textContent = '증여세 + 양도세';
+      $('bestAmt').textContent = headAmt(familyTotal);
+      $('bestSub').innerHTML = `받는 분 증여세 ${headAmt(r.paid)} + 증여하는 분 양도세 ${headAmt(burden.total)}<br>`
+        + (d > 0 ? `일반증여보다 ${headAmt(d)} 절약` : d < 0 ? `일반증여보다 ${headAmt(-d)} 더 많아요` : '일반증여와 같아요');
     } else if (grossOn && !gs.nonResident) {
       $('bestLabel').textContent = '증여하는 분이 대신 내실 증여세';
-      $('bestTitle').textContent = '🎁 대납액까지 포함한 증여세';
-      $('bestAmt').textContent = wonFull(r.paid);
-      $('bestHangul').textContent = hangul(r.paid);
-      $('bestSub').innerHTML = `대납액도 증여로 보아 직접 낼 때(${wonFull(base.paid)})보다<br>${wonFull(r.paid - base.paid)} 더 늘어나요 · 총 증여재산 ${hangul(r.N)}`;
+      $('bestTitle').textContent = `🎁 ${manwon(inp.N)} 증여 · 증여세 대납`;
+      $('bestAmtLabel').textContent = '대납 포함 증여세';
+      $('bestAmt').textContent = headAmt(r.paid);
+      $('bestSub').innerHTML = `대납액도 증여로 보아 직접 낼 때보다 ${headAmt(r.paid - base.paid)} 늘어나요<br>총 증여재산 ${manwon(r.N)}`;
     } else {
-      $('bestLabel').textContent = '예상 증여세';
-      $('bestTitle').textContent = '🎁 납부할 증여세';
-      $('bestAmt').textContent = wonFull(r.paid);
-      $('bestHangul').textContent = hangul(r.paid);
+      $('bestLabel').textContent = '증여세 계산 결과';
+      $('bestTitle').textContent = `🎁 ${manwon(inp.N)} 증여`;
+      $('bestAmtLabel').textContent = '예상 증여세';
+      $('bestAmt').textContent = headAmt(r.paid);
       const ded = r.giftDed + r.marriageDed;
-      $('bestSub').innerHTML = `증여재산 ${hangul(r.taxable)}에서 공제 ${hangul(ded)} 적용`
+      $('bestSub').innerHTML = `증여재산 ${manwon(r.taxable)}에서 공제 ${manwon(ded)} 적용`
         + (inp.report ? '<br>기한 내 신고 시 신고세액공제 3% 반영' : '<br>신고세액공제 미적용');
     }
 
@@ -1632,8 +1617,8 @@
 
     resultEl.classList.add('show');
     requestAnimationFrame(() => resultEl.classList.add('visible'));
-    window.__stickyData = zero ? null : burden ? { label: '증여세 + 양도세', amt: wonFull(familyTotal) }
-      : { label: grossOn ? '대납 포함 증여세' : '예상 증여세', amt: wonFull(r.paid) };
+    window.__stickyData = zero ? null : burden ? { label: '증여세 + 양도세', amt: headAmt(familyTotal) }
+      : { label: grossOn ? '대납 포함 증여세' : '예상 증여세', amt: headAmt(r.paid) };
     updateStickyBar();
   });
 
